@@ -33,6 +33,10 @@ final class AppModel: ObservableObject {
         }
     }
     var currentSnapshot: LayoutSnapshot? { snapshots[configuration.fingerprint] }
+    var savedSnapshots: [LayoutSnapshot] {
+        snapshots.values.sorted { $0.capturedAt > $1.capturedAt }
+    }
+    func snapshot(for fingerprint: String) -> LayoutSnapshot? { snapshots[fingerprint] }
     var displayStatus: String { "\(configuration.displays.count) display\(configuration.displays.count == 1 ? "" : "s") · \(currentSnapshot == nil ? "No saved layout" : "Layout saved")" }
     func refreshActiveApplication() { recordActiveApplication(NSWorkspace.shared.frontmostApplication) }
     func requestAccessibility() { permissionGranted = accessibility.isTrusted(prompt: true); diagnostic = permissionGranted ? "Accessibility access granted." : "Grant Accessibility access in System Settings, then return here." }

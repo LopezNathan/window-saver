@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MenuContent: View {
     @EnvironmentObject private var model: AppModel
+    @Environment(\.openSettings) private var openSettings
     var body: some View {
         Button("Save Current Window Positions") { model.saveCurrent() }
             .onAppear { model.refreshActiveApplication() }
@@ -14,7 +15,13 @@ struct MenuContent: View {
         Text(model.displayStatus).foregroundStyle(.secondary)
         Toggle("Automatic Restore", isOn: $model.automaticRestore)
         Divider()
-        SettingsLink { Text("Settings & Diagnostics…") }
+        Button("Stored Layouts & Settings…") {
+            openSettings()
+            DispatchQueue.main.async {
+                NSApp.activate(ignoringOtherApps: true)
+                NSApp.windows.first(where: \.isVisible)?.makeKeyAndOrderFront(nil)
+            }
+        }
         Button("Quit Window Saver") { NSApplication.shared.terminate(nil) }
     }
 }
@@ -22,16 +29,206 @@ struct MenuContent: View {
 struct SettingsView: View {
     @EnvironmentObject private var model: AppModel
     @Environment(\.dismiss) private var dismiss
+    @State private var selectedFingerprint: String?
+    @State private var columnVisibility: NavigationSplitViewVisibility = .all
+
+    private var selectedSnapshot: LayoutSnapshot? {
+        guard let selectedFingerprint else { return model.currentSnapshot ?? model.savedSnapshots.first }
+        return model.snapshot(for: selectedFingerprint) ?? model.currentSnapshot ?? model.savedSnapshots.first
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            Text("Window Saver").font(.title2.bold())
-            GroupBox("Accessibility") {
-                HStack { Image(systemName: model.permissionGranted ? "checkmark.shield.fill" : "exclamationmark.shield.fill").foregroundStyle(model.permissionGranted ? .green : .orange); Text(model.permissionGranted ? "Access granted" : "Access required to save and restore windows"); Spacer(); Button(model.permissionGranted ? "Refresh" : "Grant Access") { model.permissionGranted ? model.refreshPermission() : model.requestAccessibility() } }
+        ZStack(alignment: .topLeading) {
+            VStack(spacing: 0) {
+                header
+                Divider()
+                HStack(spacing: 0) {
+                    if columnVisibility == .all {
+                        configurationList
+                            .frame(width: 235)
+                        Divider()
+                    }
+                    detailContent
+                }
+                .frame(minHeight: 430)
+                Divider()
+                footer
             }
-            GroupBox("Behavior") { Toggle("Restore automatically after display changes", isOn: $model.automaticRestore) }
-            GroupBox("Current display setup") { VStack(alignment: .leading) { Text(model.displayStatus); if let snapshot = model.currentSnapshot { Text("Saved \(snapshot.capturedAt.formatted(date: .abbreviated, time: .shortened)) · \(snapshot.windows.count) windows").foregroundStyle(.secondary) } } }
-            GroupBox("Diagnostics") { Text(model.diagnostic).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading) }
-            HStack { Spacer(); Button("Done") { dismiss() }.keyboardShortcut(.defaultAction) }
-        }.padding(24).frame(width: 480).onAppear { model.refreshPermission() }
+        }
+        .frame(width: 900, height: 700)
+        .onAppear {
+            if selectedFingerprint == nil { selectedFingerprint = model.currentSnapshot?.configuration.fingerprint ?? model.savedSnapshots.first?.configuration.fingerprint }
+            model.refreshPermission()
+        }
+        .onChange(of: model.configuration.fingerprint) { _, fingerprint in selectedFingerprint = fingerprint }
+    }
+
+    private var header: some View {
+        HStack(spacing: 12) {
+            Button(action: toggleSidebar) {
+                Image(systemName: "sidebar.left")
+                    .font(.system(size: 17, weight: .medium))
+                    .frame(width: 40, height: 40)
+            }
+            .buttonStyle(.borderless)
+            .contentShape(Rectangle())
+            .help(columnVisibility == .all ? "Hide display configurations" : "Show display configurations")
+            .offset(x: -8)
+
+            Image(systemName: "rectangle.3.group.fill")
+                .font(.system(size: 22, weight: .semibold)).foregroundStyle(.tint)
+                .frame(width: 40, height: 40).background(.tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Stored Window Layouts").font(.title3.weight(.semibold))
+                Text("Browse the display setups Window Saver knows about.").font(.subheadline).foregroundStyle(.secondary)
+            }
+            Spacer()
+            if model.permissionGranted {
+                Label("Accessibility enabled", systemImage: "checkmark.circle.fill").font(.caption).foregroundStyle(.green)
+            } else { Button("Grant Access") { model.requestAccessibility() } }
+        }
+        .padding(.horizontal, 22).padding(.vertical, 15)
+    }
+
+    private func toggleSidebar() {
+        columnVisibility = columnVisibility == .all ? .detailOnly : .all
+    }
+
+    private var configurationList: some View {
+        List(selection: $selectedFingerprint) {
+            Section("Display configurations") {
+                ForEach(model.savedSnapshots) { snapshot in
+                    ConfigurationRow(snapshot: snapshot, isCurrent: snapshot.configuration.fingerprint == model.configuration.fingerprint)
+                        .tag(snapshot.configuration.fingerprint as String?)
+                }
+            }
+        }.listStyle(.sidebar)
+    }
+
+    @ViewBuilder
+    private var detailContent: some View {
+        if let snapshot = selectedSnapshot {
+            LayoutDetail(snapshot: snapshot, isCurrent: snapshot.configuration.fingerprint == model.configuration.fingerprint)
+                .id(snapshot.id)
+        } else {
+            ContentUnavailableView("No saved layouts", systemImage: "rectangle.on.rectangle.slash", description: Text("Save your current windows from the menu bar to create a display layout."))
+        }
+    }
+
+    private var footer: some View {
+        HStack {
+            Toggle("Restore automatically after display changes", isOn: $model.automaticRestore).font(.subheadline)
+            Spacer()
+            Text(model.diagnostic).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+            Button("Done") { dismiss() }.keyboardShortcut(.defaultAction)
+        }.padding(.horizontal, 18).padding(.vertical, 12)
+    }
+}
+
+private struct ConfigurationRow: View {
+    let snapshot: LayoutSnapshot; let isCurrent: Bool
+    var body: some View {
+        HStack(spacing: 9) {
+            Image(systemName: snapshot.configuration.displays.count == 1 ? "display" : "display.2").foregroundStyle(isCurrent ? Color.accentColor : Color.secondary)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("\(snapshot.configuration.displays.count) Display\(snapshot.configuration.displays.count == 1 ? "" : "s")").fontWeight(isCurrent ? .semibold : .regular)
+                Text("\(snapshot.windows.count) windows · \(snapshot.capturedAt.formatted(date: .abbreviated, time: .shortened))").font(.caption2).foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+            if isCurrent { Image(systemName: "checkmark.circle.fill").foregroundStyle(.green).accessibilityLabel("Current display setup") }
+        }.padding(.vertical, 3)
+    }
+}
+
+private struct LayoutDetail: View {
+    let snapshot: LayoutSnapshot; let isCurrent: Bool
+    private var displays: [DisplayDescriptor] { snapshot.configuration.displays }
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 5) {
+                        HStack(spacing: 7) {
+                            Text(isCurrent ? "Current display setup" : "Saved display setup").font(.title3.weight(.semibold))
+                            if isCurrent { Text("ACTIVE").font(.caption2.weight(.bold)).foregroundStyle(.green).padding(.horizontal, 6).padding(.vertical, 3).background(.green.opacity(0.12), in: Capsule()) }
+                        }
+                        Text("Saved \(snapshot.capturedAt.formatted(date: .complete, time: .shortened))").font(.subheadline).foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Label("\(snapshot.windows.count) saved windows", systemImage: "macwindow.stack").font(.subheadline.weight(.medium))
+                }
+                MonitorMap(displays: displays, windows: snapshot.windows).frame(height: 190)
+                HStack(spacing: 12) {
+                    DetailStat(value: "\(displays.count)", label: "Displays")
+                    DetailStat(value: "\(snapshot.windows.count)", label: "Windows")
+                    DetailStat(value: "\(Set(snapshot.windows.map(\.bundleIdentifier)).count)", label: "Apps")
+                }
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Windows by display").font(.headline)
+                    ForEach(displays, id: \.identity.stableID) { display in
+                        let count = snapshot.windows.filter { $0.sourceDisplayID == display.identity.stableID }.count
+                        HStack {
+                            Image(systemName: display.isPrimary ? "display.and.arrow.down" : "display").foregroundStyle(display.isPrimary ? Color.accentColor : Color.secondary)
+                            Text(display.isPrimary ? "Main display" : "External display")
+                            Text("\(Int(display.bounds.width)) × \(Int(display.bounds.height))").foregroundStyle(.secondary)
+                            Spacer()
+                            Text("\(count) window\(count == 1 ? "" : "s")").fontWeight(.medium).monospacedDigit()
+                        }.font(.subheadline).padding(.vertical, 8)
+                        if display.identity.stableID != displays.last?.identity.stableID { Divider() }
+                    }
+                }.padding(14).background(.quaternary.opacity(0.55), in: RoundedRectangle(cornerRadius: 12))
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+}
+
+private struct DetailStat: View {
+    let value: String; let label: String
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) { Text(value).font(.title2.weight(.semibold)).monospacedDigit(); Text(label).font(.caption).foregroundStyle(.secondary) }
+            .frame(maxWidth: .infinity, alignment: .leading).padding(12).background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+private struct MonitorMap: View {
+    let displays: [DisplayDescriptor]; let windows: [WindowSnapshot]
+    var body: some View {
+        GeometryReader { proxy in
+            let union = displayUnion
+            let available = CGRect(x: 18, y: 18, width: proxy.size.width - 36, height: proxy.size.height - 36)
+            let scale = min(available.width / max(union.width, 1), available.height / max(union.height, 1))
+            ZStack(alignment: .topLeading) {
+                RoundedRectangle(cornerRadius: 14).fill(Color(nsColor: .windowBackgroundColor).opacity(0.65))
+                ForEach(displays, id: \.identity.stableID) { display in
+                    let frame = scaledFrame(for: display.bounds, union: union, in: available, scale: scale)
+                    MonitorTile(display: display, windowCount: windows.filter { $0.sourceDisplayID == display.identity.stableID }.count)
+                        .frame(width: frame.width, height: frame.height).position(x: frame.midX, y: frame.midY)
+                }
+            }
+        }
+        .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(.separator.opacity(0.7)))
+        .accessibilityElement(children: .combine).accessibilityLabel("Graphical display arrangement with \(displays.count) displays")
+    }
+    private var displayUnion: CGRect { displays.map { $0.bounds.cgRect }.reduce(.null) { $0.union($1) } }
+    private func scaledFrame(for bounds: RectValue, union: CGRect, in available: CGRect, scale: CGFloat) -> CGRect {
+        let rect = bounds.cgRect
+        return CGRect(x: available.minX + (rect.minX - union.minX) * scale, y: available.minY + (union.maxY - rect.maxY) * scale, width: rect.width * scale, height: rect.height * scale)
+    }
+}
+
+private struct MonitorTile: View {
+    let display: DisplayDescriptor; let windowCount: Int
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            RoundedRectangle(cornerRadius: 8).fill(display.isPrimary ? Color.accentColor.opacity(0.16) : Color.secondary.opacity(0.12))
+            RoundedRectangle(cornerRadius: 8).strokeBorder(display.isPrimary ? Color.accentColor.opacity(0.8) : .secondary.opacity(0.65), lineWidth: display.isPrimary ? 2 : 1)
+            if display.isPrimary { Rectangle().fill(Color.accentColor).frame(height: 4).clipShape(RoundedRectangle(cornerRadius: 8)) }
+            VStack(alignment: .leading, spacing: 2) {
+                Text("\(Int(display.bounds.x)), \(Int(display.bounds.y))").font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
+                Spacer()
+                Text("\(Int(display.bounds.width)) × \(Int(display.bounds.height))").font(.caption.weight(.semibold).monospacedDigit())
+                Text("\(windowCount) window\(windowCount == 1 ? "" : "s")").font(.caption2).foregroundStyle(.secondary)
+            }.padding(8)
+        }.minimumScaleFactor(0.6)
     }
 }
