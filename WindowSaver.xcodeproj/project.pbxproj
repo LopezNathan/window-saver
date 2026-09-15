@@ -1,0 +1,432 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00C61D13B830B6919B122707 /* WindowSaverApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228B7F3B5871CC2045D6F3CE /* WindowSaverApp.swift */; };
+		0F2FB3AC4D89C80850435408 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A22D964BC4878934B5556A /* Views.swift */; };
+		39A2F7EFDE9ABE7D60A7FC4F /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D1E2CB2476C4B407C4026 /* AppModel.swift */; };
+		96311559551B140BB8410F05 /* WindowAccessibilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DFA8A667B2FB7773DE3265 /* WindowAccessibilityService.swift */; };
+		CA649C0F26973E0339B09EE6 /* DisplayTopologyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D80628C35600D7DF71C819 /* DisplayTopologyService.swift */; };
+		CE08EDAD71127DB09108ABE8 /* SnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81146527EBEE487E814D143C /* SnapshotStore.swift */; };
+		D172908CE98454C6B552C967 /* WindowMatchingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52AFD13AEC76C810C2F401E2 /* WindowMatchingTests.swift */; };
+		E93EBF7E46B17569B3794768 /* RestoreCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A66EAA1F689114752A1BF2 /* RestoreCoordinator.swift */; };
+		EA78F289A30B0E87D2621C9B /* WindowMatching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C94B6DCB8C025D681CF5909 /* WindowMatching.swift */; };
+		F87CC1198DA50BCC0A6CE627 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926289B72A6C931424AA6767 /* Models.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8822EE2F820E3E4661DF373F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AF254A588FF3575A4EAFE050 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5CCC9E56B7E2549AA2261D37;
+			remoteInfo = WindowSaver;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		17A22D964BC4878934B5556A /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
+		228B7F3B5871CC2045D6F3CE /* WindowSaverApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowSaverApp.swift; sourceTree = "<group>"; };
+		30D80628C35600D7DF71C819 /* DisplayTopologyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTopologyService.swift; sourceTree = "<group>"; };
+		52AFD13AEC76C810C2F401E2 /* WindowMatchingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowMatchingTests.swift; sourceTree = "<group>"; };
+		6BFECE2A02E5D44CE42DA5EE /* Window Saver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Window Saver.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C94B6DCB8C025D681CF5909 /* WindowMatching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowMatching.swift; sourceTree = "<group>"; };
+		81146527EBEE487E814D143C /* SnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStore.swift; sourceTree = "<group>"; };
+		926289B72A6C931424AA6767 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		944D1E2CB2476C4B407C4026 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		978AA7598C8B515EB7BB9AA8 /* WindowSaverTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WindowSaverTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C7DFA8A667B2FB7773DE3265 /* WindowAccessibilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowAccessibilityService.swift; sourceTree = "<group>"; };
+		F1A66EAA1F689114752A1BF2 /* RestoreCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreCoordinator.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		1CB67D49D809522E9005E44A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6BFECE2A02E5D44CE42DA5EE /* Window Saver.app */,
+				978AA7598C8B515EB7BB9AA8 /* WindowSaverTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		33B6C9BD33144447AC8148FF /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				944D1E2CB2476C4B407C4026 /* AppModel.swift */,
+				30D80628C35600D7DF71C819 /* DisplayTopologyService.swift */,
+				926289B72A6C931424AA6767 /* Models.swift */,
+				F1A66EAA1F689114752A1BF2 /* RestoreCoordinator.swift */,
+				81146527EBEE487E814D143C /* SnapshotStore.swift */,
+				17A22D964BC4878934B5556A /* Views.swift */,
+				C7DFA8A667B2FB7773DE3265 /* WindowAccessibilityService.swift */,
+				7C94B6DCB8C025D681CF5909 /* WindowMatching.swift */,
+				228B7F3B5871CC2045D6F3CE /* WindowSaverApp.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		7881F6A065846A4D472E827A = {
+			isa = PBXGroup;
+			children = (
+				33B6C9BD33144447AC8148FF /* Sources */,
+				DCD3B63626470D1FF525E769 /* Tests */,
+				1CB67D49D809522E9005E44A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DCD3B63626470D1FF525E769 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				52AFD13AEC76C810C2F401E2 /* WindowMatchingTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5CCC9E56B7E2549AA2261D37 /* WindowSaver */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8B1CE85BD5304C02D588AF12 /* Build configuration list for PBXNativeTarget "WindowSaver" */;
+			buildPhases = (
+				0A7FF60799BFE556BC8D4E3F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WindowSaver;
+			packageProductDependencies = (
+			);
+			productName = WindowSaver;
+			productReference = 6BFECE2A02E5D44CE42DA5EE /* Window Saver.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7FD619DCE5D69CC69AC8F514 /* WindowSaverTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AE1F07E0E74ED3A21C4DD4E5 /* Build configuration list for PBXNativeTarget "WindowSaverTests" */;
+			buildPhases = (
+				83ED809E7E82EBD433AEF078 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				312AD8518E66B7618063C03B /* PBXTargetDependency */,
+			);
+			name = WindowSaverTests;
+			packageProductDependencies = (
+			);
+			productName = WindowSaverTests;
+			productReference = 978AA7598C8B515EB7BB9AA8 /* WindowSaverTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AF254A588FF3575A4EAFE050 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					5CCC9E56B7E2549AA2261D37 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = DA1A37E1CAEDC7A9531CD097 /* Build configuration list for PBXProject "WindowSaver" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 7881F6A065846A4D472E827A;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 1CB67D49D809522E9005E44A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5CCC9E56B7E2549AA2261D37 /* WindowSaver */,
+				7FD619DCE5D69CC69AC8F514 /* WindowSaverTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0A7FF60799BFE556BC8D4E3F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39A2F7EFDE9ABE7D60A7FC4F /* AppModel.swift in Sources */,
+				CA649C0F26973E0339B09EE6 /* DisplayTopologyService.swift in Sources */,
+				F87CC1198DA50BCC0A6CE627 /* Models.swift in Sources */,
+				E93EBF7E46B17569B3794768 /* RestoreCoordinator.swift in Sources */,
+				CE08EDAD71127DB09108ABE8 /* SnapshotStore.swift in Sources */,
+				0F2FB3AC4D89C80850435408 /* Views.swift in Sources */,
+				96311559551B140BB8410F05 /* WindowAccessibilityService.swift in Sources */,
+				EA78F289A30B0E87D2621C9B /* WindowMatching.swift in Sources */,
+				00C61D13B830B6919B122707 /* WindowSaverApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83ED809E7E82EBD433AEF078 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D172908CE98454C6B552C967 /* WindowMatchingTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		312AD8518E66B7618063C03B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5CCC9E56B7E2549AA2261D37 /* WindowSaver */;
+			targetProxy = 8822EE2F820E3E4661DF373F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0C1ADD14C6372CEF6919822C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Window Saver.app/Contents/MacOS/Window Saver";
+			};
+			name = Debug;
+		};
+		79A3E054696FB3A2858DC930 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WindowSaver.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_NAME = "Window Saver";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Debug;
+		};
+		7AF4A1BE48D1A78A870E2458 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = WindowSaver.entitlements;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nathan.windowsaver;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		7D56A47FC4E1A29512DAB954 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = WindowSaver.entitlements;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nathan.windowsaver;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		EA00ED1B780B864DCB7704FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WindowSaver.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_NAME = "Window Saver";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Release;
+		};
+		FEA36CA209FA350F24AEAAA2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Window Saver.app/Contents/MacOS/Window Saver";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8B1CE85BD5304C02D588AF12 /* Build configuration list for PBXNativeTarget "WindowSaver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79A3E054696FB3A2858DC930 /* Debug */,
+				EA00ED1B780B864DCB7704FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AE1F07E0E74ED3A21C4DD4E5 /* Build configuration list for PBXNativeTarget "WindowSaverTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C1ADD14C6372CEF6919822C /* Debug */,
+				FEA36CA209FA350F24AEAAA2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DA1A37E1CAEDC7A9531CD097 /* Build configuration list for PBXProject "WindowSaver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7D56A47FC4E1A29512DAB954 /* Debug */,
+				7AF4A1BE48D1A78A870E2458 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AF254A588FF3575A4EAFE050 /* Project object */;
+}

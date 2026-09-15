@@ -1,0 +1,38 @@
+name: WindowSaver
+options:
+  bundleIdPrefix: com.nathan
+  deploymentTarget:
+    macOS: "15.0"
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+    PRODUCT_BUNDLE_IDENTIFIER: com.nathan.windowsaver
+    CODE_SIGN_ENTITLEMENTS: WindowSaver.entitlements
+targets:
+  WindowSaver:
+    type: application
+    platform: macOS
+    sources:
+      - Sources
+    settings:
+      base:
+        INFOPLIST_FILE: Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        PRODUCT_NAME: Window Saver
+        CODE_SIGN_STYLE: Automatic
+        SWIFT_STRICT_CONCURRENCY: complete
+    entitlements:
+      path: WindowSaver.entitlements
+      properties:
+        com.apple.security.app-sandbox: false
+  WindowSaverTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - Tests
+    dependencies:
+      - target: WindowSaver
+    settings:
+      base:
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Window Saver.app/Contents/MacOS/Window Saver"
+        BUNDLE_LOADER: "$(TEST_HOST)"
