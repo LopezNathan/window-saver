@@ -4,7 +4,12 @@ struct MenuContent: View {
     @EnvironmentObject private var model: AppModel
     var body: some View {
         Button("Save Current Window Positions") { model.saveCurrent() }
+            .onAppear { model.refreshActiveApplication() }
         Button("Restore Windows") { model.restoreNow() }.disabled(model.currentSnapshot == nil)
+        Divider()
+        Text(model.activeApplicationName).foregroundStyle(.secondary)
+        Button("Update All Windows for \(model.activeApplicationName)") { model.updateActiveApplicationWindows() }
+        Button("Update Active Window") { model.updateActiveWindow() }
         Divider()
         Text(model.displayStatus).foregroundStyle(.secondary)
         Toggle("Automatic Restore", isOn: $model.automaticRestore)

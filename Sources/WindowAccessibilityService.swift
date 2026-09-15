@@ -4,6 +4,8 @@ import ApplicationServices
 protocol WindowAccessibilityProviding: Sendable {
     func isTrusted(prompt: Bool) -> Bool
     func captureWindows(in configuration: DisplayConfiguration, excludedBundleIDs: Set<String>) -> [WindowSnapshot]
+    func captureWindows(for app: NSRunningApplication, in configuration: DisplayConfiguration) -> [WindowSnapshot]
+    func captureFocusedWindow(for app: NSRunningApplication, in configuration: DisplayConfiguration) -> WindowSnapshot?
     func restore(_ snapshot: WindowSnapshot, in configuration: DisplayConfiguration) -> RestoreResult
 }
 
@@ -15,13 +17,22 @@ final class WindowAccessibilityService: WindowAccessibilityProviding, @unchecked
         guard isTrusted() else { return [] }
         return NSWorkspace.shared.runningApplications.flatMap { app -> [WindowSnapshot] in
             guard let bundleID = app.bundleIdentifier, !excludedBundleIDs.contains(bundleID) else { return [] }
-            return appWindows(for: app).enumerated().compactMap { ordinal, window in
-                guard isStandard(window), let frame = frameValue(window), let display = display(containing: frame.cgRect, configuration: configuration) else { return nil }
-                let title = stringValue(window, attribute: "AXTitle") ?? ""
-                let key = WindowKey(accessibilityIdentifier: stringValue(window, attribute: "AXIdentifier"), documentURL: stringValue(window, attribute: "AXDocument"), normalizedTitle: normalize(title), role: stringValue(window, attribute: "AXRole") ?? "", subrole: stringValue(window, attribute: "AXSubrole") ?? "", ordinal: ordinal)
-                return WindowSnapshot(id: UUID(), bundleIdentifier: bundleID, key: key, sourceDisplayID: display.identity.stableID, relativeFrame: relative(frame.cgRect, to: display.bounds.cgRect), wasMinimized: boolValue(window, attribute: kAXMinimizedAttribute) ?? false)
-            }
+            return captureWindows(for: app, in: configuration)
         }
+    }
+    func captureWindows(for app: NSRunningApplication, in configuration: DisplayConfiguration) -> [WindowSnapshot] {
+        guard isTrusted(), let bundleID = app.bundleIdentifier else { return [] }
+        return appWindows(for: app).enumerated().compactMap { snapshot(for: $0.element, ordinal: $0.offset, bundleIdentifier: bundleID, configuration: configuration) }
+    }
+    func captureFocusedWindow(for app: NSRunningApplication, in configuration: DisplayConfiguration) -> WindowSnapshot? {
+        guard isTrusted(), let bundleID = app.bundleIdentifier else { return nil }
+        let element = AXUIElementCreateApplication(app.processIdentifier)
+        var value: CFTypeRef?
+        guard AXUIElementCopyAttributeValue(element, kAXFocusedWindowAttribute as CFString, &value) == .success,
+              let window = value else { return nil }
+        let windows = appWindows(for: app)
+        let ordinal = windows.firstIndex { CFEqual($0, window) } ?? 0
+        return snapshot(for: unsafeBitCast(window, to: AXUIElement.self), ordinal: ordinal, bundleIdentifier: bundleID, configuration: configuration)
     }
     func restore(_ snapshot: WindowSnapshot, in configuration: DisplayConfiguration) -> RestoreResult {
         var result = RestoreResult()
@@ -44,6 +55,12 @@ final class WindowAccessibilityService: WindowAccessibilityProviding, @unchecked
         var value: CFTypeRef?
         guard AXUIElementCopyAttributeValue(element, kAXWindowsAttribute as CFString, &value) == .success else { return [] }
         return value as? [AXUIElement] ?? []
+    }
+    private func snapshot(for window: AXUIElement, ordinal: Int, bundleIdentifier: String, configuration: DisplayConfiguration) -> WindowSnapshot? {
+        guard isStandard(window), let frame = frameValue(window), let display = display(containing: frame.cgRect, configuration: configuration) else { return nil }
+        let title = stringValue(window, attribute: "AXTitle") ?? ""
+        let key = WindowKey(accessibilityIdentifier: stringValue(window, attribute: "AXIdentifier"), documentURL: stringValue(window, attribute: "AXDocument"), normalizedTitle: normalize(title), role: stringValue(window, attribute: "AXRole") ?? "", subrole: stringValue(window, attribute: "AXSubrole") ?? "", ordinal: ordinal)
+        return WindowSnapshot(id: UUID(), bundleIdentifier: bundleIdentifier, key: key, sourceDisplayID: display.identity.stableID, relativeFrame: relative(frame.cgRect, to: display.bounds.cgRect), wasMinimized: boolValue(window, attribute: kAXMinimizedAttribute) ?? false)
     }
     private func isStandard(_ window: AXUIElement) -> Bool {
         guard stringValue(window, attribute: "AXRole") == "AXWindow" else { return false }
