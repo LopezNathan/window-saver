@@ -34,7 +34,7 @@
 		228B7F3B5871CC2045D6F3CE /* WindowSaverApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowSaverApp.swift; sourceTree = "<group>"; };
 		30D80628C35600D7DF71C819 /* DisplayTopologyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTopologyService.swift; sourceTree = "<group>"; };
 		52AFD13AEC76C810C2F401E2 /* WindowMatchingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowMatchingTests.swift; sourceTree = "<group>"; };
-		6BFECE2A02E5D44CE42DA5EE /* Window Saver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Window Saver.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6BFECE2A02E5D44CE42DA5EE /* WindowSaver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WindowSaver.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C94B6DCB8C025D681CF5909 /* WindowMatching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowMatching.swift; sourceTree = "<group>"; };
 		81146527EBEE487E814D143C /* SnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStore.swift; sourceTree = "<group>"; };
 		926289B72A6C931424AA6767 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
@@ -48,7 +48,7 @@
 		1CB67D49D809522E9005E44A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6BFECE2A02E5D44CE42DA5EE /* Window Saver.app */,
+				6BFECE2A02E5D44CE42DA5EE /* WindowSaver.app */,
 				978AA7598C8B515EB7BB9AA8 /* WindowSaverTests.xctest */,
 			);
 			name = Products;
@@ -104,7 +104,7 @@
 			packageProductDependencies = (
 			);
 			productName = WindowSaver;
-			productReference = 6BFECE2A02E5D44CE42DA5EE /* Window Saver.app */;
+			productReference = 6BFECE2A02E5D44CE42DA5EE /* WindowSaver.app */;
 			productType = "com.apple.product-type.application";
 		};
 		7FD619DCE5D69CC69AC8F514 /* WindowSaverTests */ = {
@@ -132,7 +132,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2620;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					5CCC9E56B7E2549AA2261D37 = {
 						ProvisioningStyle = Automatic;
@@ -200,7 +200,6 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -218,7 +217,6 @@
 				CODE_SIGN_ENTITLEMENTS = WindowSaver.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -266,11 +264,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = WindowSaver.entitlements;
 				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -282,10 +278,9 @@
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nathan.windowsaver;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lopeznathan.windowsaver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
@@ -327,11 +322,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = WindowSaver.entitlements;
 				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -350,10 +343,9 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nathan.windowsaver;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lopeznathan.windowsaver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
@@ -367,7 +359,6 @@
 				CODE_SIGN_ENTITLEMENTS = WindowSaver.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -385,7 +376,6 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
