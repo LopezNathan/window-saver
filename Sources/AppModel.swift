@@ -73,6 +73,20 @@ final class AppModel: ObservableObject {
             diagnostic = "Updated the active window for \(activeApplicationName)."
         }
     }
+    func removeSavedWindows(ids: Set<UUID>, from snapshot: LayoutSnapshot) {
+        let retained = snapshot.windows.filter { !ids.contains($0.id) }
+        guard retained.count != snapshot.windows.count else { return }
+        let updated = LayoutSnapshot(id: UUID(), configuration: snapshot.configuration, capturedAt: .now, windows: retained)
+        var replacement = snapshots
+        replacement[snapshot.configuration.fingerprint] = updated
+        do {
+            try store.save(replacement)
+            snapshots = replacement
+            diagnostic = "Removed \(snapshot.windows.count - retained.count) saved window\(snapshot.windows.count - retained.count == 1 ? "" : "s")."
+        } catch {
+            diagnostic = error.localizedDescription
+        }
+    }
     func restoreNow() { refreshPermission(); guard permissionGranted else { diagnostic = "Accessibility access is required to restore windows."; return }; coordinator.restoreNow() }
     private func recordActiveApplication(_ app: NSRunningApplication?) {
         guard let app = nonWindowSaverApplication(app) else { return }

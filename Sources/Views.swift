@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct MenuContent: View {
     @EnvironmentObject private var model: AppModel
@@ -142,6 +143,7 @@ private struct ConfigurationRow: View {
 
 private struct LayoutDetail: View {
     let snapshot: LayoutSnapshot; let isCurrent: Bool
+    @State private var presentedContents: SavedContents?
     private var displays: [DisplayDescriptor] { snapshot.configuration.displays }
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -159,8 +161,8 @@ private struct LayoutDetail: View {
                 MonitorMap(displays: displays, windows: snapshot.windows).frame(height: 190)
                 HStack(spacing: 12) {
                     DetailStat(value: "\(displays.count)", label: "Displays")
-                    DetailStat(value: "\(snapshot.windows.count)", label: "Windows")
-                    DetailStat(value: "\(Set(snapshot.windows.map(\.bundleIdentifier)).count)", label: "Apps")
+                    DetailStat(value: "\(snapshot.windows.count)", label: "Windows", action: { presentedContents = .windows })
+                    DetailStat(value: "\(Set(snapshot.windows.map(\.bundleIdentifier)).count)", label: "Apps", action: { presentedContents = .apps })
                 }
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Windows by display").font(.headline)
@@ -179,14 +181,196 @@ private struct LayoutDetail: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .sheet(item: $presentedContents) { contents in
+            SavedContentsView(snapshot: snapshot, contents: contents)
+        }
     }
 }
 
 private struct DetailStat: View {
     let value: String; let label: String
+    var action: (() -> Void)? = nil
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) { Text(value).font(.title2.weight(.semibold)).monospacedDigit(); Text(label).font(.caption).foregroundStyle(.secondary) }
-            .frame(maxWidth: .infinity, alignment: .leading).padding(12).background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 10))
+        if let action {
+            Button(action: action) { cardContents }
+                .buttonStyle(.plain)
+                .accessibilityHint("Show saved \(label.lowercased())")
+        } else {
+            cardContents
+        }
+    }
+
+    private var cardContents: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(value).font(.title2.weight(.semibold)).monospacedDigit()
+            Text(label).font(.caption).foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+private enum SavedContents: String, Identifiable {
+    case windows, apps
+    var id: String { rawValue }
+}
+
+private struct SavedContentsView: View {
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var model: AppModel
+    let snapshot: LayoutSnapshot
+    let contents: SavedContents
+
+    private var currentSnapshot: LayoutSnapshot {
+        model.snapshot(for: snapshot.configuration.fingerprint) ?? snapshot
+    }
+
+    private var appGroups: [(bundleIdentifier: String, windows: [WindowSnapshot])] {
+        Dictionary(grouping: currentSnapshot.windows, by: \.bundleIdentifier)
+            .map { (bundleIdentifier: $0.key, windows: $0.value.sorted(by: windowOrder)) }
+            .sorted { applicationName(for: $0.bundleIdentifier).localizedCaseInsensitiveCompare(applicationName(for: $1.bundleIdentifier)) == .orderedAscending }
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text(contents == .windows ? "Saved Windows" : "Saved Apps").font(.title2.weight(.semibold))
+                Spacer()
+                Button("Done") { dismiss() }.keyboardShortcut(.defaultAction)
+            }
+            .padding(20)
+            Divider()
+            List {
+                if contents == .windows {
+                    ForEach(appGroups, id: \.bundleIdentifier) { group in
+                        Section {
+                            ForEach(group.windows) { window in
+                                WindowRow(window: window, displayName: displayName(for: window)) {
+                                    model.removeSavedWindows(ids: [window.id], from: currentSnapshot)
+                                }
+                            }
+                        } header: {
+                            ApplicationGroupHeader(
+                                bundleIdentifier: group.bundleIdentifier,
+                                name: applicationName(for: group.bundleIdentifier),
+                                windowCount: group.windows.count,
+                                deleteAction: {
+                                    model.removeSavedWindows(ids: Set(group.windows.map(\.id)), from: currentSnapshot)
+                                }
+                            )
+                        }
+                    }
+                } else {
+                    ForEach(appGroups, id: \.bundleIdentifier) { group in
+                        ApplicationGroupHeader(
+                            bundleIdentifier: group.bundleIdentifier,
+                            name: applicationName(for: group.bundleIdentifier),
+                            windowCount: group.windows.count,
+                            deleteAction: {
+                                model.removeSavedWindows(ids: Set(group.windows.map(\.id)), from: currentSnapshot)
+                            }
+                        )
+                    }
+                }
+            }
+            .listStyle(.inset)
+        }
+        .frame(width: 580, height: 500)
+    }
+
+    private func applicationName(for bundleIdentifier: String) -> String {
+        NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == bundleIdentifier })?.localizedName ?? bundleIdentifier
+    }
+
+    private func displayName(for window: WindowSnapshot) -> String {
+        guard let display = currentSnapshot.configuration.displays.first(where: { $0.identity.stableID == window.sourceDisplayID }) else { return "Unknown display" }
+        return display.isPrimary ? "Main display" : "External display"
+    }
+
+    private func windowOrder(_ lhs: WindowSnapshot, _ rhs: WindowSnapshot) -> Bool {
+        let lhsName = applicationName(for: lhs.bundleIdentifier)
+        let rhsName = applicationName(for: rhs.bundleIdentifier)
+        if lhsName != rhsName { return lhsName.localizedCaseInsensitiveCompare(rhsName) == .orderedAscending }
+        return lhs.key.normalizedTitle.localizedCaseInsensitiveCompare(rhs.key.normalizedTitle) == .orderedAscending
+    }
+}
+
+private struct WindowRow: View {
+    let window: WindowSnapshot
+    let displayName: String
+    let deleteAction: () -> Void
+
+    private var title: String { window.key.normalizedTitle.isEmpty ? "Untitled window" : window.key.normalizedTitle }
+    private var size: String { "\(Int((window.relativeFrame.width * 100).rounded()))% × \(Int((window.relativeFrame.height * 100).rounded()))% of display" }
+
+    var body: some View {
+        HStack(spacing: 10) {
+            ApplicationIcon(bundleIdentifier: window.bundleIdentifier)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title).lineLimit(1)
+                HStack(spacing: 5) {
+                    Text(displayName)
+                    Text(size)
+                    if window.wasMinimized { Text("Minimized") }
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 8)
+            Button(role: .destructive, action: deleteAction) {
+                Image(systemName: "xmark.circle.fill")
+            }
+            .buttonStyle(.borderless)
+            .help("Remove this window from the saved layout")
+            .accessibilityLabel("Remove \(title) from the saved layout")
+        }
+        .padding(.vertical, 3)
+    }
+}
+
+private struct ApplicationGroupHeader: View {
+    let bundleIdentifier: String
+    let name: String
+    let windowCount: Int
+    var deleteAction: (() -> Void)? = nil
+
+    var body: some View {
+        HStack(spacing: 10) {
+            ApplicationIcon(bundleIdentifier: bundleIdentifier)
+            Text(name)
+            Spacer()
+            Text("\(windowCount) window\(windowCount == 1 ? "" : "s")")
+                .foregroundStyle(.secondary)
+            if let deleteAction {
+                Button(role: .destructive, action: deleteAction) {
+                    Image(systemName: "xmark.circle.fill")
+                }
+                .buttonStyle(.borderless)
+                .help("Remove \(name) and its saved windows from this layout")
+                .accessibilityLabel("Remove \(name) from the saved layout")
+            }
+        }
+        .textCase(nil)
+    }
+}
+
+private struct ApplicationIcon: View {
+    let bundleIdentifier: String
+
+    var body: some View {
+        Image(nsImage: icon)
+            .resizable()
+            .interpolation(.high)
+            .frame(width: 28, height: 28)
+            .accessibilityHidden(true)
+    }
+
+    private var icon: NSImage {
+        if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleIdentifier) {
+            return NSWorkspace.shared.icon(forFile: url.path)
+        }
+        return NSImage(systemSymbolName: "app", accessibilityDescription: nil) ?? NSImage()
     }
 }
 
