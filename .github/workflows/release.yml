@@ -60,6 +60,11 @@ jobs:
           mkdir -p dmg-contents
           cp -R "$app_path" dmg-contents/Window\ Saver.app
           ln -s /Applications dmg-contents/Applications
+          approval_link="dmg-contents/Open Privacy & Security.webloc"
+          plutil -create xml1 "$approval_link"
+          plutil -insert URL -string \
+            "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension" \
+            "$approval_link"
           hdiutil create \
             -volname "Window Saver" \
             -srcfolder dmg-contents \

@@ -38,8 +38,15 @@ git tag -a v0.0.1 -m "Window Saver 0.0.1"
 git push origin v0.0.1
 ```
 
-The release ZIP has an ad-hoc signature that keeps the app bundle intact, but
-it is not Developer ID-signed or notarized. macOS may require the user to
-right-click the app and select **Open** the first time. To distribute without
-that warning, add Developer ID signing and notarization credentials to the
-release workflow.
+### Installing a release
+
+1. Download and open `WindowSaver.dmg`.
+2. Drag **Window Saver.app** to **Applications**, then eject the disk image.
+3. Open Window Saver from **Applications**. If macOS blocks it, dismiss the
+   alert, then use the DMG's **Open Privacy & Security** shortcut.
+4. In the **Security** section, click **Open Anyway**, then confirm **Open**.
+
+The approval button is available for about an hour after the blocked launch.
+Releases are ad-hoc signed to keep the app bundle intact, but are not yet
+Developer ID-signed or notarized. Developer ID signing and notarization will
+remove this extra approval step.
