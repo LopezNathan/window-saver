@@ -37,6 +37,8 @@ git tag -a v0.0.1 -m "Window Saver 0.0.1"
 git push origin v0.0.1
 ```
 
-The release ZIP is unsigned. macOS may require the user to right-click the app
-and select **Open** the first time. To distribute without that warning, add
-Developer ID signing and notarization credentials to the release workflow.
+The release ZIP has an ad-hoc signature that keeps the app bundle intact, but
+it is not Developer ID-signed or notarized. macOS may require the user to
+right-click the app and select **Open** the first time. To distribute without
+that warning, add Developer ID signing and notarization credentials to the
+release workflow.

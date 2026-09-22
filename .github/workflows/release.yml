@@ -46,9 +46,14 @@ jobs:
 
       - name: Package release assets
         run: |
+          app_path="build/WindowSaver.xcarchive/Products/Applications/Window Saver.app"
+          # Xcode leaves an executable-only ad-hoc signature when signing is disabled.
+          # Re-sign the bundle so its resources are sealed before it is distributed.
+          codesign --force --deep --sign - "$app_path"
+          codesign --verify --deep --strict --verbose=2 "$app_path"
           mkdir -p release
           ditto -c -k --sequesterRsrc --keepParent \
-            "build/WindowSaver.xcarchive/Products/Applications/Window Saver.app" \
+            "$app_path" \
             release/WindowSaver-macOS.zip
           shasum -a 256 release/WindowSaver-macOS.zip > release/WindowSaver-macOS.zip.sha256
 
