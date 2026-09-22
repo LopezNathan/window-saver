@@ -57,6 +57,17 @@ jobs:
             release/WindowSaver-macOS.zip
           shasum -a 256 release/WindowSaver-macOS.zip > release/WindowSaver-macOS.zip.sha256
 
+          mkdir -p dmg-contents
+          cp -R "$app_path" dmg-contents/Window\ Saver.app
+          ln -s /Applications dmg-contents/Applications
+          hdiutil create \
+            -volname "Window Saver" \
+            -srcfolder dmg-contents \
+            -ov \
+            -format UDZO \
+            release/WindowSaver.dmg
+          shasum -a 256 release/WindowSaver.dmg > release/WindowSaver.dmg.sha256
+
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}

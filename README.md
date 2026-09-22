@@ -27,7 +27,8 @@ Snapshots are stored locally at `~/Library/Application Support/WindowSaver/snaps
 ## Releases
 
 Pushing a version tag builds and tests the app on GitHub's macOS runner, then
-publishes `WindowSaver-macOS.zip` and its SHA-256 checksum as a GitHub Release.
+publishes a drag-to-install `WindowSaver.dmg`, a ZIP, and SHA-256 checksums as
+a GitHub Release.
 
 The tag must match `CFBundleShortVersionString` in `Info.plist` (with a `v`
 prefix). The initial release is therefore:
